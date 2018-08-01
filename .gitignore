@@ -2,6 +2,7 @@ full
 mnist_png
 graph
 train
+test
 validation
 not_used_categories
 collage_sample

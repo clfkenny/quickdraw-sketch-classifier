@@ -24,10 +24,10 @@ train_datagen = ImageDataGenerator(rescale=1./255
 test_datagen = ImageDataGenerator(rescale = 1./255)
 
 train_dir = "./train"
-validation_dir = "./test"
+validation_dir = "./validation"
 
 num_classes = len(os.listdir('./train'))
-batch_size=32
+batch_size=64
 
 print('\n\nProcessing training data...')
 train_generator = train_datagen.flow_from_directory(
@@ -48,9 +48,11 @@ validation_generator = test_datagen.flow_from_directory(
 
 # callbacks
 epochs = 30000
-samples = 45000
+samples = len(os.listdir('./train/' +os.listdir('./train')[0]))
+print('\n\nNumber of samples: {}\n\n'.format(str(samples)))
 
-schedule = SGDRScheduler(min_lr=1e-5,
+
+schedule = SGDRScheduler(min_lr=1e-6,
                          max_lr=1e-3,
                          steps_per_epoch=np.ceil(samples/batch_size),
                          lr_decay=0.9,
@@ -89,7 +91,11 @@ model = Sequential()
 model.add(Conv2D(32, kernel_size = kernel_size, activation = 'relu', input_shape = (28, 28, 1)))
 # model.add(MaxPooling2D(pool_size))
 model.add(BatchNormalization())
-model.add(Conv2D(64, kernel_size = kernel_size, activation = 'relu'))
+
+model.add(Conv2D(64, kernel_size = kernel_size, activation = 'relu')) #newly added
+model.add(BatchNormalization())
+
+model.add(Conv2D(128, kernel_size = kernel_size, activation = 'relu'))
 model.add(MaxPooling2D(pool_size))
 model.add(BatchNormalization())
 model.add(Conv2D(256, kernel_size = kernel_size, activation = 'relu'))
@@ -98,6 +104,9 @@ model.add(BatchNormalization())
 model.add(Dropout(0.5))
 
 model.add(Flatten())
+
+model.add(Dense(128, activation = 'relu')) #newly added
+model.add(BatchNormalization())
 
 model.add(Dense(256, activation = 'relu'))
 model.add(BatchNormalization())
