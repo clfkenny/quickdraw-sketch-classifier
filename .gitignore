@@ -5,4 +5,6 @@ train
 validation
 not_used_categories
 collage_sample
-mnist_png.tar.gz
+test
+models
+
